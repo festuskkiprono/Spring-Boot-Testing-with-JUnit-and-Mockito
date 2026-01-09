@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: spring-boot-testing
+  jpa:
+    show-sql: true
+
