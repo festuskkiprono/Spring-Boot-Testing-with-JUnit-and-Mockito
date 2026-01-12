@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.web.servlet.ResultActions;
 import spring_journey.spring_boot_testing.entity.Employee;
 import spring_journey.spring_boot_testing.exception.ResourceNotFoundException;
 import spring_journey.spring_boot_testing.repository.EmployeeRepository;
@@ -21,6 +22,10 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -116,7 +121,8 @@ public class EmployeeServiceTest {
             //given -> precondition/setup
             BDDMockito.given(employeeRepository.findById(1L)).willReturn(Optional.of(employee));
             //when -> action that we are going to test
-            Employee savedEmployee = employeeService.getEmployeeById(1L);
+            Optional<Employee> optionalEmployee = employeeService.getEmployeeById(1L);
+            Employee savedEmployee = optionalEmployee.get();
             //then -> verify the output
             Assertions.assertThat(savedEmployee).isNotNull();
         }
@@ -135,7 +141,7 @@ public class EmployeeServiceTest {
                 Assertions.assertThat(updatedEmployee.getFirstName()).isEqualTo("Felix");
             }
 
-            @DisplayName("")
+            @DisplayName("Juint test for delete employee method")
                 @Test
                 public void givenEmployeeId_whenDeleteEmployee_thenNothing()
                 {
@@ -148,5 +154,7 @@ public class EmployeeServiceTest {
                     //then -> verify the output
                     verify(employeeRepository,times(1)).deleteById(id);
                 }
+
+
 
 }
